@@ -23,6 +23,7 @@ void help_print () {
 
 
 int main(int argc, char const *argv[]) {
+
 	if (strcmp(argv[1], "help") == 0) {
 		help_print();
 		return EXIT_SUCCESS;
@@ -45,12 +46,14 @@ int main(int argc, char const *argv[]) {
 
 
 	// Get optional commands
-	std::string decr_key = "";
+	std::string decr_key_e = "";
+	std::string decr_key_n = "";
 	for (int i=2; i < argc; i++) {
 		if (strcmp(argv[i], "-key") == 0) {
-			if (i + 1 < argc) {
-				decr_key = argv[i+1];
-				i++;
+			if (i + 2 < argc) {
+				decr_key_e = argv[i+1];
+				decr_key_n = argv[i+2];
+				i = i + 2;
 			}
 			else {
 				std::cerr << "Error, missing argument for YOUR_KEY." << std::endl;
@@ -73,23 +76,24 @@ int main(int argc, char const *argv[]) {
 	}
 
 
-
+	std::string system_cmd;
 	if (cmd == "encrypt") {
-		// TODO: Implement encryption
-		std::string line;
-
+		system_cmd = "python ./rsa_encryption.py encrypt " + FILE_NAME + " " + OUTPUT_FILE;
+		std::cout << "File encryption completed" << std::endl;
 	}
-
-
 	else if (cmd == "decrypt") {
-		if (decr_key == "") {
-			std::cout << "Enter key for decryption: " << std::endl;
-			std::cin >> decr_key;
+		if (decr_key_e == "" || decr_key_n == "") {
+			std::cout << "Enter key exponent for decryption: " << std::endl;
+			std::cin >> decr_key_e;
+			std::cout << "Enter RSA key for decryption: " << std::endl;
+			std::cin >> decr_key_n;
 		}
-
-		// TODO: Implement decryption
+		system_cmd = "python ./rsa_encryption.py decrypt " + FILE_NAME + " " + OUTPUT_FILE + " " + decr_key_e + " " + decr_key_n;
+		std::cout << "File decryption completed" << std::endl;
 	}
 
+	const char *cstr = system_cmd.c_str();
+	system(cstr); // run rsa_encryption.py
 
 	return EXIT_SUCCESS;
 }
