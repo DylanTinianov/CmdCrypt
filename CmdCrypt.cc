@@ -1,8 +1,14 @@
+// TODO: Change permissions to key_store to read only after encrypted, and add a password if possible
+// TODO: Fix decryption.
+// TODO: Fix unit tests
+// TODO: Set up Travis CI
+
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <cassert>
 
+#define KEY_STORE "key_store.txt"
 
 void help_print () {
 	const std::vector<std::string> help_cmds = {
@@ -12,7 +18,6 @@ void help_print () {
 		"First argument:  encrypt or decrypt -> select between encryption or decryption modes",
 		"Second argument: FileName -> enter the filename to be encrypted or decrypted ",
 		"\nOPTIONAL ARGUMENTS:",
-		"-key YOUR_KEY -> enter your known decryption key if in decryption mode; else be prompted for it",
 		"-new NEW_FILE_NAME -> encrypt/ decrypt the contents into a new file NEW_FILE_NAME; don't write to the second argument",
 		""
 	};
@@ -23,7 +28,6 @@ void help_print () {
 
 
 int main(int argc, char const *argv[]) {
-
 	if (strcmp(argv[1], "help") == 0) {
 		help_print();
 		return EXIT_SUCCESS;
@@ -37,33 +41,34 @@ int main(int argc, char const *argv[]) {
 	const std::string FILE_NAME = argv[2];
 	std::string OUTPUT_FILE = FILE_NAME; // defult
 
-	std::ifstream user_file;
-	user_file.open(FILE_NAME);
-	if (user_file.fail()) {
-		std::cerr << "Error, cannot open specified text file." << std::endl;
+	std::ifstream user_file_test;
+	user_file_test.open(FILE_NAME);
+	if (user_file_test.fail()) {
+		std::cerr << "Error, cannot open specified input text file." << std::endl;
 		return EXIT_SUCCESS;
 	}
+	user_file_test.close();
+
+	std::ifstream user_key_store_test;
+	user_key_store_test.open(KEY_STORE);
+	if (user_key_store_test.fail()) {
+		std::cerr << "Error, cannot open specified input text file." << std::endl;
+		return EXIT_SUCCESS;
+	}
+	user_key_store_test.close();
+
+	std::ifstream output_file_test;
+	output_file_test.open(OUTPUT_FILE);
+	if (output_file_test.fail()) {
+		std::cerr << "Error, cannot open specified output text file." << std::endl;
+		return EXIT_SUCCESS;
+	}
+	output_file_test.close();
 
 
 	// Get optional commands
-	std::string decr_key_e = "";
-	std::string decr_key_n = "";
 	for (int i=2; i < argc; i++) {
-		if (strcmp(argv[i], "-key") == 0) {
-			if (i + 2 < argc) {
-				decr_key_e = argv[i+1];
-				decr_key_n = argv[i+2];
-				i = i + 2;
-			}
-			else {
-				std::cerr << "Error, missing argument for YOUR_KEY." << std::endl;
-				return EXIT_SUCCESS;
-			}
-
-		}
-
-
-		else if (strcmp(argv[i], "-new") == 0) {
+		if (strcmp(argv[i], "-new") == 0) {
 			if (i + 1 < argc) {
 				OUTPUT_FILE = argv[i+1];
 				i++;
@@ -82,13 +87,8 @@ int main(int argc, char const *argv[]) {
 		std::cout << "File encryption completed" << std::endl;
 	}
 	else if (cmd == "decrypt") {
-		if (decr_key_e == "" || decr_key_n == "") {
-			std::cout << "Enter key exponent for decryption: " << std::endl;
-			std::cin >> decr_key_e;
-			std::cout << "Enter RSA key for decryption: " << std::endl;
-			std::cin >> decr_key_n;
-		}
-		system_cmd = "python ./rsa_encryption.py decrypt " + FILE_NAME + " " + OUTPUT_FILE + " " + decr_key_e + " " + decr_key_n;
+
+		system_cmd = "python ./rsa_encryption.py decrypt " + FILE_NAME + " " + OUTPUT_FILE;
 		std::cout << "File decryption completed" << std::endl;
 	}
 
