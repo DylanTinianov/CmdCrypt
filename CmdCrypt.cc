@@ -1,4 +1,6 @@
 // TODO: Change permissions to key_store to read only after encrypted, and add a password if possible
+// TODO: Change key_store to key_store_encryptedFileName so they can have more then one for different files
+// TODO: Allow to type in the location of the key_store_encryptedFileName file instead of needing it in this directory
 // TODO: Fix decryption.
 // TODO: Fix unit tests
 // TODO: Set up Travis CI
