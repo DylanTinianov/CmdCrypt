@@ -1,4 +1,4 @@
-# CmdCrypt [![Build Status](https://travis-ci.org/DylanTinianov/CmdCrypt.svg?branch=master)]
+# CmdCrypt [![Build Status](https://travis-ci.org/DylanTinianov/CmdCrypt.svg?branch=master)](https://travis-ci.org/DylanTinianov/CmdCrypt) ![]
 
 A command line encryption and decryption tool
 
