@@ -1,0 +1,3 @@
+language: bash
+
+script: bash ./unit_tests/run_tests.sh
