@@ -3,7 +3,7 @@ import prime_generator
 import sys
 import os
 
-KEY_STORE = "key_store.txt"
+KEY_STORE = "key_store.decr"
 
 
 class PrivateKeyGen:
@@ -69,7 +69,8 @@ class PublicKey:
             for word in line:
                 for letter in word:
                     plain_text.append(letter)
-            plain_text.append("\n")
+                #plain_text.append(' ')
+            # plain_text.append("\n")
 
         for character in plain_text:
             number = ord(character)
@@ -112,12 +113,11 @@ def file_encrypt(data_in, write_file):
 def file_decrypt(data_in, write_file):
     key_store = open(os.path.join(os.path.dirname(__file__), KEY_STORE), "r")
 
+    tmp_key = list()
     for line in key_store:
-        decr_key_e = int(line)
-        break
-
-    for line in key_store:
-        decr_key_n = int(line)
+        tmp_key.append(line)
+    decr_key_e = int(tmp_key[0])
+    decr_key_n = int(tmp_key[1])
 
     out = write_file
     data = data_in

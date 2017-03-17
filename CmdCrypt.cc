@@ -3,14 +3,13 @@
 // TODO: Allow to type in the location of the key_store_encryptedFileName file instead of needing it in this directory
 // TODO: Fix decryption.
 // TODO: Fix unit tests
-// TODO: Set up Travis CI
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <cassert>
 
-#define KEY_STORE "key_store.txt"
+#define KEY_STORE "key_store.decr"
 
 void help_print () {
 	const std::vector<std::string> help_cmds = {
@@ -52,9 +51,10 @@ int main(int argc, char const *argv[]) {
 	user_file_test.close();
 
 	std::ifstream user_key_store_test;
+    std::ofstream a_file(KEY_STORE);    // create key_store file.
 	user_key_store_test.open(KEY_STORE);
 	if (user_key_store_test.fail()) {
-		std::cerr << "Error, cannot open specified input text file." << std::endl;
+		std::cerr << "Error, cannot open key_store file." << std::endl;
 		return EXIT_SUCCESS;
 	}
 	user_key_store_test.close();
